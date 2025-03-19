@@ -1,0 +1,15 @@
+logsBucket: 'gs://cloud-build-logs-ritvik'  # Replace with your actual bucket name
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'us-central1-docker.pkg.dev/cloud-k8s-assignment-454201/my-repo/container2:latest', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'us-central1-docker.pkg.dev/cloud-k8s-assignment-454201/my-repo/container2:latest']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['container', 'clusters', 'get-credentials', 'my-gke-cluster', '--region', 'us-central1']
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: ['set', 'image', 'deployment/container2', 'container2=us-central1-docker.pkg.dev/cloud-k8s-assignment-454201/my-repo/container2:latest']
+  env:
+  - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=my-gke-cluster'
+images:
+- 'us-central1-docker.pkg.dev/cloud-k8s-assignment-454201/my-repo/container2:latest'
