@@ -32,22 +32,22 @@ def calculate():
                 f.seek(0)
             except csv.Error as e:
                 print(f"Sniff error: {e}")  # Debug: Sniff failure reason
-                return jsonify({"file": filename, "error": "Input file not in CSV format."}), 400
+                return jsonify({"file": filename, "error": "Input file not in CSV format.1"}), 400
 
             reader = csv.DictReader(f)
             print(f"Fieldnames: {reader.fieldnames}")  # Debug: Detected headers
-            if not {'product', 'amount'}.issubset(reader.fieldnames or []):
+            if not {'product', 'amount '}.issubset(reader.fieldnames or []):
                 print(f"Missing required headers: expected {'product, amount'}, got {reader.fieldnames}")
-                return jsonify({"file": filename, "error": "Input file not in CSV format."}), 400
+                return jsonify({"file": filename, "error": "Input file not in CSV format.2"}), 400
 
             for row in reader:
                 if row.get('product') == product:
-                    total += int(row.get('amount', 0))
+                    total += int(row.get('amount ', 0))
 
         return jsonify({"file": filename, "sum": total}), 200
     except (ValueError, csv.Error, KeyError) as e:
         print(f"Parsing error: {e}")  # Debug: Parsing failure
-        return jsonify({"file": filename, "error": "Input file not in CSV format."}), 400
+        return jsonify({"file": filename, "error": "Input file not in CSV format.3"}), 400
     except Exception as e:
         print(f"Unexpected error: {e}")  # Debug: Other errors
         return jsonify({"file": filename, "error": "An unexpected error occurred."}), 500
